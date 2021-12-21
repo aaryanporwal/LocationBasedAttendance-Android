@@ -158,10 +158,15 @@ public class MainActivity extends AppCompatActivity {
             if (locationResult == null) {
                 return;
             }
-            for (Location location : locationResult.getLocations()) {
-                //Log.d(TAG, "onLocation Result" + location.toString());
-                variableLatitude = Double.toString(location.getLatitude());
-                variableLongitude = Double.toString(location.getLongitude());
+            for(Location location:locationResult.getLocations()){
+                Log.d(TAG, "onLocation Result" + location.toString());
+
+
+
+                variableLatitude=Double.toString(location.getLatitude());
+                variableLongitude=Double.toString(location.getLongitude());
+
+
 
                 textViewLat.setText(Double.toString(location.getLatitude()));
                 textViewLong.setText(Double.toString(location.getLongitude()));
@@ -372,72 +377,8 @@ public class MainActivity extends AppCompatActivity {
             } else {
 
             }
-        }
-        if (requestCode == Access_Background_request_code) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                //request granted
-                Toast.makeText(this, "BACKGROUND PERMISSION GRANTED", Toast.LENGTH_SHORT).show();
-            } else {
-                //show dialog box
-                showSettingsDialog();
-                Toast.makeText(this, "BACKGROUND LOCATION PERMISSION IS REQUIRED", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    private void  showSettingsDialog(){
-        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-        builder.setTitle("Need Permissions");
-        builder.setMessage("This app needs Background permissions to use this feature. You can grant them app settings");
-        builder.setPositiveButton("GOTO SETTINGS", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-                openSettings();
-            }
-        });
-
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-
-        builder.show();
-    }
-
-    private void openSettings(){
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", getPackageName(), null);
-        intent.setData(uri);
-        startActivity(intent);
-    }
-
-
-    private void addGeofence(String ClassroomNum, double Fence_Latitude, double Fence_Longitude) {
-        Log.d(TAG, "addGeofence() called.."+ClassroomNum);
-        LatLng latLng = new LatLng(Fence_Latitude, Fence_Longitude);
-        //UUID.randomUUID().toString()
-        Geofence geofence = geofenceHelper.getGeofence(ClassroomNum, latLng, GEOFENCE_RADIUS, Geofence.GEOFENCE_TRANSITION_DWELL);
-        GeofencingRequest geofencingRequest = geofenceHelper.getGeofencingRequest(geofence);
-        //geofenceHelper.sendClassroomVal(ClassroomNum);
-        PendingIntent pendingIntent = geofenceHelper.getPendingIntent();
-
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,Manifest.permission.ACCESS_BACKGROUND_LOCATION)!=PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.ACCESS_BACKGROUND_LOCATION)) {
-
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, Access_Background_request_code);
-            } else {
-                ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION}, Access_Background_request_code);
+            else{
+                Toast.makeText(MainActivity.this, "Couldn't get location permission 😢", Toast.LENGTH_LONG).show();
             }
             return;
         }
